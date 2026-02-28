@@ -1,0 +1,32 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+migrate_working_dir/
+*.swp
+
+# IntelliJ / Android Studio
+*.iml
+*.iws
+.idea/
+
+# Gradle
+.gradle/
+build/
+local.properties
+
+# Flutter/Dart/Pub
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+/build/
+pubspec.lock
+bfg.jar

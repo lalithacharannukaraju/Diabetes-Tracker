@@ -1,0 +1,15 @@
+name: diabetes_tracker
+description: A Flutter app to track diabetes medication and diet
+publish_to: 'none'
+environment:
+  sdk: '>=2.17.0 <3.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.2
+  table_calendar: ^3.0.8
+  provider: ^6.0.5
+
+flutter:
+  uses-material-design: true
