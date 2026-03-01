@@ -30,3 +30,5 @@ local.properties
 /build/
 pubspec.lock
 bfg.jar
+.env
+backend/.env

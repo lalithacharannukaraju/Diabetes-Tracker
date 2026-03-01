@@ -38,7 +38,7 @@ class _AddMedicineScreenState extends State<AddMedicineScreen> {
     }
   }
 
-  void _save() {
+  Future<void> _save() async {
     if (!_formKey.currentState!.validate()) return;
     _formKey.currentState!.save();
     final days = <int>[];
@@ -52,6 +52,7 @@ class _AddMedicineScreenState extends State<AddMedicineScreen> {
       return;
     }
     final newMed = Medicine(
+      id: widget.existing?.id ?? '',
       name: _name,
       dosage: _dosage,
       time: _time,
@@ -59,11 +60,10 @@ class _AddMedicineScreenState extends State<AddMedicineScreen> {
       importance: _importance,
     );
     final appState = Provider.of<AppState>(context, listen: false);
-    if (isEditing && widget.index != null) {
-      appState.updateMedicine(widget.index!, newMed);
-    } else {
-      appState.addMedicine(newMed);
-    }
+    await appState.upsertMedicine(
+      medicine: newMed,
+      existingId: isEditing ? widget.existing?.id : null,
+    );
     
     // If opened via bottom navigation, there might be nothing to pop
     if (Navigator.of(context).canPop()) {

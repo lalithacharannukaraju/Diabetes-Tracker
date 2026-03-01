@@ -14,6 +14,18 @@ class _CalendarScreenState extends State<CalendarScreen> {
   DateTime? _selectedDay;
 
   @override
+  void initState() {
+    super.initState();
+    final today = DateTime.now();
+    Future.microtask(() async {
+      final appState = Provider.of<AppState>(context, listen: false);
+      await appState.loadMedicines();
+      await appState.loadDietFor(today);
+      await appState.refreshTakenStatus(today);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     final appState = Provider.of<AppState>(context);
     final DateTime date = _selectedDay ?? DateTime.now();
@@ -41,11 +53,14 @@ class _CalendarScreenState extends State<CalendarScreen> {
             selectedDayPredicate: (day) {
               return isSameDay(_selectedDay, day);
             },
-            onDaySelected: (selectedDay, focusedDay) {
+            onDaySelected: (selectedDay, focusedDay) async {
               setState(() {
                 _selectedDay = selectedDay;
                 _focusedDay = focusedDay;
               });
+              final appState = Provider.of<AppState>(context, listen: false);
+              await appState.loadDietFor(selectedDay);
+              await appState.refreshTakenStatus(selectedDay);
             },
           ),
           Expanded(

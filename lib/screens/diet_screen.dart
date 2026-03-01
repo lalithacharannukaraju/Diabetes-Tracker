@@ -12,6 +12,14 @@ class _DietScreenState extends State<DietScreen> {
   final _controller = TextEditingController();
   DateTime _selectedDate = DateTime.now();
 
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      Provider.of<AppState>(context, listen: false).loadDietFor(_selectedDate);
+    });
+  }
+
   void _addEntry() {
     final text = _controller.text.trim();
     if (text.isEmpty) return;
@@ -30,6 +38,7 @@ class _DietScreenState extends State<DietScreen> {
       setState(() {
         _selectedDate = picked;
       });
+      await Provider.of<AppState>(context, listen: false).loadDietFor(_selectedDate);
     }
   }
 

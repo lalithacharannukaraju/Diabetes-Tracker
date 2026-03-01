@@ -16,6 +16,17 @@ class _MedicineScreenState extends State<MedicineScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    // Load medicines and today's taken status when this screen is first shown
+    Future.microtask(() async {
+      final appState = Provider.of<AppState>(context, listen: false);
+      await appState.loadMedicines();
+      await appState.refreshTakenStatus(DateTime.now());
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     final appState = Provider.of<AppState>(context);
     final now = DateTime.now();
@@ -45,37 +56,42 @@ class _MedicineScreenState extends State<MedicineScreen> {
                   ),
                 ],
               ),
-              ...todayList.map((m) {
-                final taken = appState.isTaken(m, now);
-                Color importanceColor;
-                switch (m.importance) {
-                  case MedicineImportance.high:
-                    importanceColor = Colors.redAccent;
-                    break;
-                  case MedicineImportance.medium:
-                    importanceColor = Colors.orangeAccent;
-                    break;
-                  case MedicineImportance.low:
-                    importanceColor = Colors.greenAccent;
-                    break;
-                }
-                return Card(
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                  elevation: 2,
-                  margin: const EdgeInsets.symmetric(vertical: 4),
-                  child: CheckboxListTile(
-                    title: Text(m.name),
-                    subtitle: Text('${m.dosage} at ${m.time.format(context)}'),
-                    value: taken,
-                    activeColor: importanceColor,
-                    side: BorderSide(color: importanceColor, width: 2),
-                    onChanged: (_) {
-                      appState.toggleTaken(m, now);
-                    },
-                  ),
-                );
-              }),
-
+              const SizedBox(height: 8),
+              if (appState.isLoading)
+                const Center(child: CircularProgressIndicator())
+              else if (todayList.isEmpty)
+                const Text('No medicines scheduled for today')
+              else
+                ...todayList.map((m) {
+                  final taken = appState.isTaken(m, now);
+                  Color importanceColor;
+                  switch (m.importance) {
+                    case MedicineImportance.high:
+                      importanceColor = Colors.redAccent;
+                      break;
+                    case MedicineImportance.medium:
+                      importanceColor = Colors.orangeAccent;
+                      break;
+                    case MedicineImportance.low:
+                      importanceColor = Colors.greenAccent;
+                      break;
+                  }
+                  return Card(
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    elevation: 2,
+                    margin: const EdgeInsets.symmetric(vertical: 4),
+                    child: CheckboxListTile(
+                      title: Text(m.name),
+                      subtitle: Text('${m.dosage} at ${m.time.format(context)}'),
+                      value: taken,
+                      activeColor: importanceColor,
+                      side: BorderSide(color: importanceColor, width: 2),
+                      onChanged: (_) {
+                        appState.toggleTaken(m, now);
+                      },
+                    ),
+                  );
+                }),
             ],
           ),
         ),
