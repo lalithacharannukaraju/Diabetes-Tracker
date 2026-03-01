@@ -6,7 +6,7 @@ class ApiClient {
   // Change this to your deployed backend URL when you host it.
   static const String baseUrl = String.fromEnvironment(
     'API_BASE_URL',
-    defaultValue: 'http://localhost:4000', // Android emulator localhost
+    defaultValue: 'https://diabetes-tracker-flax.vercel.app',
   );
 
   final String? token;

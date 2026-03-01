@@ -32,3 +32,36 @@ pubspec.lock
 bfg.jar
 .env
 backend/.env
+
+# Node.js
+node_modules/
+backend/node_modules/
+npm-debug.log
+yarn-error.log
+
+# Android Keystore/Properties
+*.jks
+*.keystore
+android/key.properties
+android/app/key.properties
+
+# iOS
+ios/.symlinks/
+ios/Pods/
+ios/Flutter/Generated.xcconfig
+ios/Flutter/flutter_export_environment.sh
+ios/Flutter/app.flx
+ios/Flutter/ephemeral/
+
+# macOS
+macos/Flutter/ephemeral/
+macos/Flutter/GeneratedPluginRegistrant.swift
+
+# Linux
+linux/flutter/ephemeral/
+
+# Windows
+windows/flutter/ephemeral/
+
+# VS Code
+.vscode/
