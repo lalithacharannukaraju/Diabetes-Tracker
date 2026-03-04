@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'medicine_screen.dart';
 import 'diet_screen.dart';
+import 'glucose_screen.dart';
 import 'calendar_screen.dart';
 import 'missed_medicines_screen.dart';
 import 'add_medicine_screen.dart';
@@ -18,6 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final List<Widget> _pages = [
     MedicineScreen(),
     DietScreen(),
+    GlucoseScreen(),
     CalendarScreen(),
     MissedMedicinesScreen(),
     AddMedicineScreen(),
@@ -40,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: _pages[_currentIndex],
       ),
       bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed, // Ensure more than 3 items display nicely
+        type: BottomNavigationBarType.fixed,
         backgroundColor: const Color(0xFF1E1E1E),
         selectedItemColor: Colors.tealAccent,
         unselectedItemColor: Colors.grey,
@@ -49,6 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(icon: Icon(Icons.fastfood), label: 'Diet'),
+          BottomNavigationBarItem(icon: Icon(Icons.bloodtype), label: 'Glucose'),
           BottomNavigationBarItem(icon: Icon(Icons.calendar_today), label: 'Calendar'),
           BottomNavigationBarItem(icon: Icon(Icons.warning_amber_rounded), label: 'Missed'),
           BottomNavigationBarItem(icon: Icon(Icons.add_circle_outline), label: 'Add'),

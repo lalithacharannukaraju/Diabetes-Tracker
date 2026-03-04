@@ -28,7 +28,7 @@ router.get('/', async (req, res) => {
 
 router.post('/', async (req, res) => {
   try {
-    const { date, text } = req.body;
+    const { date, text, timeHour, timeMinute } = req.body;
     if (!date || !text) {
       return res.status(400).json({ error: 'date and text are required' });
     }
@@ -38,9 +38,25 @@ router.post('/', async (req, res) => {
       user: req.userId,
       date: d,
       text,
+      timeHour: timeHour ?? 0,
+      timeMinute: timeMinute ?? 0,
     });
 
     res.status(201).json(entry);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+router.delete('/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const entry = await DietEntry.findOneAndDelete({ _id: id, user: req.userId });
+    if (!entry) {
+      return res.status(404).json({ error: 'Diet entry not found' });
+    }
+    res.json({ success: true });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Internal server error' });

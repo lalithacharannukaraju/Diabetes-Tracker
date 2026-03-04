@@ -21,6 +21,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
       final appState = Provider.of<AppState>(context, listen: false);
       await appState.loadMedicines();
       await appState.loadDietFor(today);
+      await appState.loadGlucoseFor(today);
       await appState.refreshTakenStatus(today);
     });
   }
@@ -31,6 +32,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
     final DateTime date = _selectedDay ?? DateTime.now();
     final diet = appState.dietFor(date);
     final meds = appState.medicinesFor(date);
+    final glucose = appState.glucoseFor(date);
     final takenMeds = meds.where((m) => appState.isTaken(m, date)).length;
     final totalMeds = meds.length;
 
@@ -60,6 +62,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
               });
               final appState = Provider.of<AppState>(context, listen: false);
               await appState.loadDietFor(selectedDay);
+              await appState.loadGlucoseFor(selectedDay);
               await appState.refreshTakenStatus(selectedDay);
             },
           ),
@@ -75,10 +78,44 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          // ── Diet Section ──
                           Text('Diet entries',
                               style: Theme.of(context).textTheme.titleMedium),
-                          if (diet.isEmpty) const Text('No diet entries recorded.') else ...diet.map((item) => ListTile(title: Text(item))),
+                          if (diet.isEmpty)
+                            const Text('No diet entries recorded.')
+                          else
+                            ...diet.map((item) => ListTile(
+                                  leading: const Icon(Icons.restaurant, color: Colors.orangeAccent, size: 20),
+                                  title: Text(item.text),
+                                  subtitle: Text(item.time.format(context)),
+                                )),
                           const SizedBox(height: 16),
+                          // ── Glucose Section ──
+                          Text('Glucose readings',
+                              style: Theme.of(context).textTheme.titleMedium),
+                          if (glucose.isEmpty)
+                            const Text('No glucose readings recorded.')
+                          else
+                            ...glucose.map((r) => ListTile(
+                                  leading: Container(
+                                    width: 36,
+                                    height: 36,
+                                    decoration: BoxDecoration(
+                                      color: r.rangeColor.withValues(alpha: 0.15),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        '${r.value.toInt()}',
+                                        style: TextStyle(color: r.rangeColor, fontWeight: FontWeight.bold, fontSize: 13),
+                                      ),
+                                    ),
+                                  ),
+                                  title: Text('${r.value.toInt()} mg/dL  •  ${r.rangeLabel}'),
+                                  subtitle: Text('${r.readingType.replaceAll('-', ' ')}  •  ${r.time.format(context)}'),
+                                )),
+                          const SizedBox(height: 16),
+                          // ── Medicines Section ──
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -93,11 +130,14 @@ class _CalendarScreenState extends State<CalendarScreen> {
                             ],
                           ),
                           const SizedBox(height: 8),
-                          if (meds.isEmpty) const Text('No medicines scheduled.') else ...meds.map((m) => ListTile(
-                                title: Text(m.name),
-                                subtitle: Text(
-                                    '${m.dosage} at ${m.time.format(context)}'),
-                              )),
+                          if (meds.isEmpty)
+                            const Text('No medicines scheduled.')
+                          else
+                            ...meds.map((m) => ListTile(
+                                  title: Text(m.name),
+                                  subtitle: Text(
+                                      '${m.dosage} at ${m.time.format(context)}'),
+                                )),
                         ],
                       ),
                     ),

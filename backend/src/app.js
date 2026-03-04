@@ -7,6 +7,7 @@ import morgan from 'morgan';
 import authRoutes from './routes/auth.js';
 import medicineRoutes from './routes/medicines.js';
 import dietRoutes from './routes/diet.js';
+import glucoseRoutes from './routes/glucose.js';
 
 dotenv.config();
 
@@ -23,6 +24,7 @@ app.get('/', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/medicines', medicineRoutes);
 app.use('/api/diet', dietRoutes);
+app.use('/api/glucose', glucoseRoutes);
 
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/diabetes_tracker';
 

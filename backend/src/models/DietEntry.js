@@ -5,6 +5,8 @@ const dietEntrySchema = new mongoose.Schema(
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     date: { type: Date, required: true },
     text: { type: String, required: true },
+    timeHour: { type: Number, min: 0, max: 23, default: 0 },
+    timeMinute: { type: Number, min: 0, max: 59, default: 0 },
   },
   { timestamps: true }
 );

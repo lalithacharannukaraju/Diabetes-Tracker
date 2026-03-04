@@ -7,8 +7,12 @@ import 'screens/add_medicine_screen.dart';
 import 'screens/all_medicines_screen.dart';
 import 'models/medicine.dart';
 import 'state/app_state.dart';
+import 'services/notification_service.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await NotificationService().init();
+
   runApp(
     ChangeNotifierProvider(
       create: (_) => AppState(),
@@ -38,7 +42,7 @@ class DiabetesTrackerApp extends StatelessWidget {
         ),
         cardTheme: CardThemeData(
           color: const Color(0xFF1E1E1E),
-          surfaceTintColor: Colors.transparent, // prevents implicit tinting in newer flutter versions
+          surfaceTintColor: Colors.transparent,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           elevation: 2,
         ),
