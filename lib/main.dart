@@ -8,20 +8,29 @@ import 'screens/all_medicines_screen.dart';
 import 'models/medicine.dart';
 import 'state/app_state.dart';
 import 'services/notification_service.dart';
+import 'services/auth_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await NotificationService().init();
 
+  // Check if user is already logged in
+  final token = await AuthService().getToken();
+  final isLoggedIn = token != null && token.isNotEmpty;
+
   runApp(
     ChangeNotifierProvider(
       create: (_) => AppState(),
-      child: DiabetesTrackerApp(),
+      child: DiabetesTrackerApp(isLoggedIn: isLoggedIn),
     ),
   );
 }
 
 class DiabetesTrackerApp extends StatelessWidget {
+  final bool isLoggedIn;
+
+  const DiabetesTrackerApp({required this.isLoggedIn});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -76,7 +85,8 @@ class DiabetesTrackerApp extends StatelessWidget {
           ),
         ),
       ),
-      initialRoute: LoginScreen.routeName,
+      // Go directly to home if already logged in
+      initialRoute: isLoggedIn ? HomeScreen.routeName : LoginScreen.routeName,
       routes: {
         LoginScreen.routeName: (context) => LoginScreen(),
         HomeScreen.routeName: (context) => HomeScreen(),

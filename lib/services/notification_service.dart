@@ -80,18 +80,22 @@ class NotificationService {
     }
 
     const androidDetails = AndroidNotificationDetails(
-      'medicine_reminders',
+      'medicine_reminders_buzzer',
       'Medicine Reminders',
       channelDescription: 'Reminds you to take your medicine on time',
       importance: Importance.high,
       priority: Priority.high,
       playSound: true,
+      sound: RawResourceAndroidNotificationSound('buzzer'),
       enableVibration: true,
     );
 
     const notifDetails = NotificationDetails(
       android: androidDetails,
-      iOS: DarwinNotificationDetails(),
+      iOS: DarwinNotificationDetails(
+        presentSound: true,
+        sound: 'buzzer.wav',
+      ),
     );
 
     await _plugin.zonedSchedule(
